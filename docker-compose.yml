@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - media_tmp:/tmp/neuroflow_work
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+    env_file: .env
+    command: celery -A app.workers.celery_app.celery_app worker --loglevel=info --concurrency=2
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - media_tmp:/tmp/neuroflow_work
+
+  beat:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+    env_file: .env
+    command: celery -A app.workers.celery_app.celery_app beat --loglevel=info
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  media_tmp:
