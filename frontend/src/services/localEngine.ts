@@ -14,7 +14,7 @@ interface LocalDB {
 const CATALOG = [
   { slug: "claude", display_name: "Anthropic Claude", category: "llm", default_model: "claude-3-7-sonnet-20250219", available_models: ["claude-3-7-sonnet-20250219", "claude-3-5-haiku-20241022"] },
   { slug: "deepseek", display_name: "DeepSeek", category: "llm", default_model: "deepseek-chat", available_models: ["deepseek-chat", "deepseek-reasoner"] },
-  { slug: "gemini", display_name: "Google Gemini", category: "llm", default_model: "gemini-2.5-flash", available_models: ["gemini-2.5-flash", "gemini-2.5-pro"] },
+  { slug: "gemini", display_name: "Google Gemini", category: "llm", default_model: "gemini-3.8-flash", available_models: ["gemini-3.8-flash", "gemini-2.5-pro"] },
   { slug: "elevenlabs", display_name: "ElevenLabs Voice", category: "voice", default_model: "eleven_multilingual_v2", available_models: ["eleven_multilingual_v2", "eleven_turbo_v2_5"] },
   { slug: "openai_images", display_name: "OpenAI Visual / DALL-E", category: "visual", default_model: "dall-e-3", available_models: ["dall-e-3", "gpt-image-1"] },
 ];
