@@ -27,42 +27,19 @@ export const NAV_ITEMS = [
 
 export function Sidebar() {
   const { sidebarCollapsed, toggleSidebar } = useAppStore();
-
   return (
-    <aside
-      className={`${
-        sidebarCollapsed ? "w-20" : "w-64"
-      } bg-[#0a0a0f]/80 backdrop-blur-xl border-r border-white/10 h-screen flex flex-col transition-all duration-300 ease-in-out`}
-    >
+    <aside className={`${sidebarCollapsed ? "w-20" : "w-64"} bg-[#0a0a0f]/80 backdrop-blur-xl border-r border-white/10 h-screen flex flex-col transition-all duration-300`}>
       <div className="h-16 flex items-center justify-between px-4 border-b border-white/10">
-        {!sidebarCollapsed && (
-          <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-            NEUROFLOW
-          </span>
-        )}
-        <button
-          onClick={toggleSidebar}
-          className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
-        >
+        {!sidebarCollapsed && <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">NEUROFLOW</span>}
+        <button onClick={toggleSidebar} className="p-2 rounded-lg hover:bg-white/10 text-gray-400">
           {sidebarCollapsed ? <Menu size={20} /> : <ChevronLeft size={20} />}
         </button>
       </div>
-
       <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
         {NAV_ITEMS.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
-                isActive
-                  ? "bg-purple-600/20 text-purple-400 border border-purple-500/30"
-                  : "text-gray-400 hover:bg-white/5 hover:text-white"
-              }`
-            }
-          >
-            <item.icon size={20} className="shrink-0" />
-            {!sidebarCollapsed && <span className="font-medium text-sm">{item.label}</span>}
+          <NavLink key={item.path} to={item.path} className={({ isActive }) => `flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${isActive ? "bg-purple-600/20 text-purple-400" : "text-gray-400 hover:bg-white/5"}`}>
+            <item.icon size={20} />
+            {!sidebarCollapsed && <span className="text-sm">{item.label}</span>}
           </NavLink>
         ))}
       </nav>
