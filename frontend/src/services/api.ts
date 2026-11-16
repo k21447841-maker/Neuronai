@@ -2,13 +2,11 @@ import { supabase } from "../lib/supabase";
 import { localApiHandler } from "./localEngine";
 
 export function getApiBase(): string {
-  const custom = localStorage.getItem("neuroflow_custom_backend_url") || "";
-  const envUrl = (import.meta.env.VITE_API_BASE_URL as string) || "";
-  const chosen = (custom || envUrl).trim();
-  if (!chosen || chosen.includes("localhost") || chosen.includes("127.0.0.1")) {
-    return "";
-  }
-  return chosen.replace(/\/$/, "");
+  const mode = localStorage.getItem("neuroflow_run_mode") || "standalone";
+  if (mode !== "cloud") return "";
+  const custom = (localStorage.getItem("neuroflow_custom_backend_url") || "").trim();
+  if (!custom || custom.includes("localhost") || custom.includes("127.0.0.1")) return "";
+  return custom.replace(/\/$/, "");
 }
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -35,10 +33,7 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
       const errBody = await res.json().catch(() => ({ detail: res.statusText }));
       throw new Error(errBody.detail || `API request failed (${res.status})`);
     }
-    throw new Error(`Server returned ${res.status} (${res.statusText})`);
-  }
-  if (!contentType.includes("application/json")) {
-    throw new Error("Backend did not return valid JSON. Check your Backend URL in Settings.");
+    throw new Error(`Server returned ${res.status}`);
   }
   return res.json() as Promise<T>;
 }
