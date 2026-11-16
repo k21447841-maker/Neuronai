@@ -1,12 +1,20 @@
 import { supabase } from "../lib/supabase";
+import { localApiHandler } from "./localEngine";
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) || "http://localhost:8000";
+export function getApiBase(): string {
+  return localStorage.getItem("neuroflow_custom_backend_url") || (import.meta.env.VITE_API_BASE_URL as string) || "";
+}
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const base = getApiBase();
+  if (!base) {
+    return localApiHandler<T>(path, options);
+  }
+
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${base}${path}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
